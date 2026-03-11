@@ -42,6 +42,14 @@ function chavePorCoordenadas(x, y) {
   return `${x},${y}`
 }
 
+function celulaTemAgente(celula) {
+  if (props.chaveAtual) {
+    return props.chaveAtual === celula.chave
+  }
+
+  return celula.x === props.inicio.x && celula.y === props.inicio.y
+}
+
 const celulasAchatadas = computed(() => {
   const celulas = []
 
@@ -110,7 +118,7 @@ function aoClicarCelula(celula) {
         :class="classesCelula(celula)"
         @click="aoClicarCelula(celula)"
       >
-        <span v-if="celula.x === inicio.x && celula.y === inicio.y">A</span>
+        <span v-if="celulaTemAgente(celula)">🤖</span>
         <span v-else-if="celula.x === objetivo.x && celula.y === objetivo.y">B</span>
       </button>
     </div>
