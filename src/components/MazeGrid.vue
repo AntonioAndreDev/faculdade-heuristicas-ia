@@ -30,10 +30,6 @@ const props = defineProps({
     type: String,
     default: '',
   },
-  mostrarAbertoFechado: {
-    type: Boolean,
-    default: true,
-  },
   desabilitado: {
     type: Boolean,
     default: false,
@@ -85,13 +81,11 @@ function classesCelula(celula) {
     return classes
   }
 
-  if (props.mostrarAbertoFechado) {
-    if (props.conjuntoAberto.has(celula.chave)) {
-      classes['is-open'] = true
-    }
-    if (props.conjuntoFechado.has(celula.chave)) {
-      classes['is-closed'] = true
-    }
+  if (props.conjuntoAberto.has(celula.chave)) {
+    classes['is-open'] = true
+  }
+  if (props.conjuntoFechado.has(celula.chave)) {
+    classes['is-closed'] = true
   }
 
   return classes

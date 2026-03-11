@@ -6,32 +6,12 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  densidadeObstaculos: {
-    type: Number,
-    required: true,
-  },
-  velocidadeAnimacao: {
-    type: Number,
-    required: true,
-  },
-  velocidadeAgente: {
-    type: Number,
-    required: true,
-  },
   modoEdicao: {
     type: String,
     required: true,
   },
   modoHeuristica: {
     type: String,
-    required: true,
-  },
-  permitirDiagonal: {
-    type: Boolean,
-    required: true,
-  },
-  mostrarAbertoFechado: {
-    type: Boolean,
     required: true,
   },
   estaAnimando: {
@@ -61,17 +41,11 @@ const emit = defineEmits([
   'resetar-busca',
   'gerar-relatorio-ia',
   'atualizar:tamanho-grade',
-  'atualizar:densidade-obstaculos',
-  'atualizar:velocidade-animacao',
-  'atualizar:velocidade-agente',
   'atualizar:modo-edicao',
   'atualizar:modo-heuristica',
-  'atualizar:permitir-diagonal',
-  'atualizar:mostrar-aberto-fechado',
 ])
 
 const rotuloPausa = computed(() => (props.estaPausado ? 'Retomar' : 'Pausar'))
-const percentualDensidade = computed(() => Math.round(props.densidadeObstaculos * 100))
 
 function paraNumero(evento) {
   return Number(evento.target.value)
@@ -112,42 +86,6 @@ function paraNumero(evento) {
     </label>
 
     <label class="field">
-      <span>Densidade de obstáculos: {{ percentualDensidade }}%</span>
-      <input
-        type="range"
-        min="0"
-        max="0.6"
-        step="0.05"
-        :value="densidadeObstaculos"
-        @input="emit('atualizar:densidade-obstaculos', paraNumero($event))"
-      />
-    </label>
-
-    <label class="field">
-      <span>Velocidade da animação: {{ velocidadeAnimacao }} ms</span>
-      <input
-        type="range"
-        min="40"
-        max="1000"
-        step="20"
-        :value="velocidadeAnimacao"
-        @input="emit('atualizar:velocidade-animacao', paraNumero($event))"
-      />
-    </label>
-
-    <label class="field">
-      <span>Velocidade do agente: {{ velocidadeAgente.toFixed(1) }} m/s</span>
-      <input
-        type="range"
-        min="1"
-        max="20"
-        step="0.5"
-        :value="velocidadeAgente"
-        @input="emit('atualizar:velocidade-agente', paraNumero($event))"
-      />
-    </label>
-
-    <label class="field">
       <span>Modo de edição</span>
       <select :value="modoEdicao" @change="emit('atualizar:modo-edicao', $event.target.value)">
         <option value="parede">Paredes</option>
@@ -156,29 +94,11 @@ function paraNumero(evento) {
       </select>
     </label>
 
-    <label class="field checkbox">
-      <input
-        type="checkbox"
-        :checked="permitirDiagonal"
-        @change="emit('atualizar:permitir-diagonal', $event.target.checked)"
-      />
-      <span>Permitir movimento diagonal</span>
-    </label>
-
     <label class="field">
       <span>Heurística</span>
       <select :value="modoHeuristica" @change="emit('atualizar:modo-heuristica', $event.target.value)">
         <option value="manhattan">Manhattan</option>
       </select>
-    </label>
-
-    <label class="field checkbox">
-      <input
-        type="checkbox"
-        :checked="mostrarAbertoFechado"
-        @change="emit('atualizar:mostrar-aberto-fechado', $event.target.checked)"
-      />
-      <span>Mostrar aberto/fechado</span>
     </label>
   </aside>
 </template>

@@ -22,7 +22,6 @@ function criarPontosIniciais(tamanho) {
 
 export function useMaze(tamanhoInicial = 20) {
   const tamanhoGrade = ref(tamanhoInicial)
-  const densidadeObstaculos = ref(0.25)
   const modoEdicao = ref('parede')
 
   const pontosIniciais = criarPontosIniciais(tamanhoInicial)
@@ -48,8 +47,8 @@ export function useMaze(tamanhoInicial = 20) {
     grade.value = criarGrade(tamanhoGrade.value, false)
   }
 
-  function gerarLabirintoAleatorio(densidade = densidadeObstaculos.value) {
-    const densidadeNormalizada = Math.max(0, Math.min(Number(densidade), 0.75))
+  function gerarLabirintoAleatorio() {
+    const densidadeNormalizada = 0.25
     const proximaGrade = criarGrade(tamanhoGrade.value, false)
 
     for (let y = 0; y < tamanhoGrade.value; y += 1) {
@@ -128,7 +127,6 @@ export function useMaze(tamanhoInicial = 20) {
   return {
     grade,
     tamanhoGrade,
-    densidadeObstaculos,
     inicio,
     objetivo,
     modoEdicao,

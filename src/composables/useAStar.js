@@ -8,13 +8,6 @@ const DIRECOES_ORTOGONAIS = [
   { dx: 0, dy: -1, fator: 1 },
 ]
 
-const DIRECOES_DIAGONAIS = [
-  { dx: 1, dy: 1, fator: Math.SQRT2 },
-  { dx: 1, dy: -1, fator: Math.SQRT2 },
-  { dx: -1, dy: 1, fator: Math.SQRT2 },
-  { dx: -1, dy: -1, fator: Math.SQRT2 },
-]
-
 function chaveNo(x, y) {
   return `${x},${y}`
 }
@@ -55,15 +48,11 @@ function custoHeuristico(origem, objetivo, modoHeuristica) {
   return (dx + dy) * DISTANCIA_CELULA_METROS
 }
 
-function obterVizinhos(noAtual, grade, permitirDiagonal) {
+function obterVizinhos(noAtual, grade) {
   const tamanho = grade.length
-  const direcoes = permitirDiagonal
-    ? [...DIRECOES_ORTOGONAIS, ...DIRECOES_DIAGONAIS]
-    : DIRECOES_ORTOGONAIS
-
   const vizinhos = []
 
-  for (const direcao of direcoes) {
+  for (const direcao of DIRECOES_ORTOGONAIS) {
     const proximoX = noAtual.x + direcao.dx
     const proximoY = noAtual.y + direcao.dy
 
@@ -73,14 +62,6 @@ function obterVizinhos(noAtual, grade, permitirDiagonal) {
 
     if (estaBloqueada(grade, proximoX, proximoY)) {
       continue
-    }
-
-    if (permitirDiagonal && direcao.dx !== 0 && direcao.dy !== 0) {
-      const horizontalBloqueada = estaBloqueada(grade, noAtual.x + direcao.dx, noAtual.y)
-      const verticalBloqueada = estaBloqueada(grade, noAtual.x, noAtual.y + direcao.dy)
-      if (horizontalBloqueada || verticalBloqueada) {
-        continue
-      }
     }
 
     vizinhos.push({
@@ -150,7 +131,6 @@ function executarBusca({
   grade,
   inicio,
   objetivo,
-  permitirDiagonal,
   modoHeuristica,
   desabilitarHeuristica,
   coletarRastro,
@@ -200,7 +180,7 @@ function executarBusca({
       encontrou = true
       noObjetivo = atual
     } else {
-      const vizinhos = obterVizinhos(atual, grade, permitirDiagonal)
+      const vizinhos = obterVizinhos(atual, grade)
       for (const vizinho of vizinhos) {
         const chaveVizinho = chaveNo(vizinho.x, vizinho.y)
 
@@ -290,9 +270,7 @@ export function executarAEstrela({
   grade,
   inicio,
   objetivo,
-  permitirDiagonal = false,
   modoHeuristica = 'manhattan',
-  velocidadeAgenteMps = VELOCIDADE_PADRAO_AGENTE_MPS,
   logger,
 }) {
   const heuristicaSegura = 'manhattan'
@@ -301,7 +279,6 @@ export function executarAEstrela({
     algoritmo: 'A*',
     tamanhoGrade: `${grade.length}x${grade.length}`,
     heuristica: heuristicaSegura,
-    movimentoDiagonal: permitirDiagonal,
     custoPassoMetros: DISTANCIA_CELULA_METROS,
   })
 
@@ -310,7 +287,6 @@ export function executarAEstrela({
     grade,
     inicio,
     objetivo,
-    permitirDiagonal,
     modoHeuristica: heuristicaSegura,
     desabilitarHeuristica: false,
     coletarRastro: true,
@@ -322,14 +298,13 @@ export function executarAEstrela({
     grade,
     inicio,
     objetivo,
-    permitirDiagonal,
     modoHeuristica: heuristicaSegura,
     desabilitarHeuristica: true,
     coletarRastro: false,
     logger: null,
   })
 
-  const tempoTotalSegundos = resultadoAEstrela.distanciaTotalMetros / Math.max(velocidadeAgenteMps, 0.001)
+  const tempoTotalSegundos = resultadoAEstrela.distanciaTotalMetros / Math.max(VELOCIDADE_PADRAO_AGENTE_MPS, 0.001)
 
   const resultado = {
     ...resultadoAEstrela,

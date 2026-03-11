@@ -5,17 +5,13 @@ import ControlsPanel from './components/ControlsPanel.vue'
 import MetricsPanel from './components/MetricsPanel.vue'
 import AiReportPanel from './components/AiReportPanel.vue'
 import { useMaze } from './composables/useMaze'
-import { VELOCIDADE_PADRAO_AGENTE_MPS, executarAEstrela } from './composables/useAStar'
+import { executarAEstrela } from './composables/useAStar'
 import { explicarExecucao } from './services/openaiService'
 import { criarLoggerAEstrela } from './utils/logger'
 
 const labirinto = useMaze(20)
 
-const permitirDiagonal = ref(false)
 const modoHeuristica = ref('manhattan')
-const mostrarAbertoFechado = ref(true)
-const velocidadeAnimacao = ref(180)
-const velocidadeAgente = ref(VELOCIDADE_PADRAO_AGENTE_MPS)
 
 const conjuntoAbertoVisual = ref(new Set())
 const conjuntoFechadoVisual = ref(new Set())
@@ -148,11 +144,8 @@ function atualizarPayloadUltimaExecucao(resultado) {
   payloadUltimaExecucao.value = {
     configuracao: {
       tamanhoGrade: labirinto.tamanhoGrade.value,
-      densidadeObstaculosPercentual: Math.round(labirinto.densidadeObstaculos.value * 100),
-      permitirDiagonal: permitirDiagonal.value,
       heuristica: rotuloHeuristica(resultado.heuristicaUsada),
       distanciaPassoMetros: 500,
-      velocidadeAgenteMps: velocidadeAgente.value,
     },
     metricas: {
       encontrou: resultado.encontrou,
@@ -189,7 +182,7 @@ async function animarPassoAPasso(resultado) {
     }
 
     aplicarIteracao(iteracao)
-    await aguardar(velocidadeAnimacao.value)
+    await aguardar(180)
   }
 
   if (tokenLocal !== tokenAnimacao.value) {
@@ -252,9 +245,7 @@ function executarBuscaAEstrela({ animar }) {
     grade: labirinto.grade.value,
     inicio: labirinto.inicio.value,
     objetivo: labirinto.objetivo.value,
-    permitirDiagonal: permitirDiagonal.value,
     modoHeuristica: modoHeuristica.value,
-    velocidadeAgenteMps: velocidadeAgente.value,
     logger,
   })
 
@@ -268,7 +259,7 @@ function executarBuscaAEstrela({ animar }) {
 }
 
 function aoGerarLabirinto() {
-  labirinto.gerarLabirintoAleatorio(labirinto.densidadeObstaculos.value)
+  labirinto.gerarLabirintoAleatorio()
   limparBusca()
   relatorioIa.value = ''
   erroIa.value = ''
@@ -356,13 +347,8 @@ onBeforeUnmount(() => {
     <section class="layout-grid">
       <ControlsPanel
         :tamanho-grade="labirinto.tamanhoGrade.value"
-        :densidade-obstaculos="labirinto.densidadeObstaculos.value"
-        :velocidade-animacao="velocidadeAnimacao"
-        :velocidade-agente="velocidadeAgente"
         :modo-edicao="labirinto.modoEdicao.value"
         :modo-heuristica="modoHeuristica"
-        :permitir-diagonal="permitirDiagonal"
-        :mostrar-aberto-fechado="mostrarAbertoFechado"
         :esta-animando="estaAnimando"
         :esta-pausado="estaPausado"
         :pode-gerar-relatorio="podeGerarRelatorio"
@@ -375,13 +361,8 @@ onBeforeUnmount(() => {
         @resetar-busca="aoResetarBusca"
         @gerar-relatorio-ia="aoGerarRelatorioIa"
         @atualizar:tamanho-grade="aoMudarTamanhoGrade"
-        @atualizar:densidade-obstaculos="(valor) => (labirinto.densidadeObstaculos.value = valor)"
-        @atualizar:velocidade-animacao="(valor) => (velocidadeAnimacao.value = valor)"
-        @atualizar:velocidade-agente="(valor) => (velocidadeAgente.value = valor)"
         @atualizar:modo-edicao="(valor) => (labirinto.modoEdicao.value = valor)"
         @atualizar:modo-heuristica="(valor) => (modoHeuristica.value = valor)"
-        @atualizar:permitir-diagonal="(valor) => (permitirDiagonal.value = valor)"
-        @atualizar:mostrar-aberto-fechado="(valor) => (mostrarAbertoFechado.value = valor)"
       />
 
       <main class="board-area">
@@ -393,7 +374,6 @@ onBeforeUnmount(() => {
           :conjunto-fechado="conjuntoFechadoVisual"
           :conjunto-caminho="conjuntoCaminhoVisual"
           :chave-atual="chaveAtualVisual"
-          :mostrar-aberto-fechado="mostrarAbertoFechado"
           :desabilitado="estaAnimando"
           @celula-clicada="aoClicarCelula"
         />

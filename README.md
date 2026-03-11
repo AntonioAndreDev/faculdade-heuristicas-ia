@@ -19,7 +19,6 @@ Simulação web de busca heurística com **A\*** em um labirinto em grid.
 
 - Cada célula representa **500 metros**.
 - Custo de movimento ortogonal: **500 m por passo**.
-- Movimento diagonal (opcional): custo **500 * sqrt(2) m**.
 - Tempo estimado: `distancia / velocidade_do_agente`.
 
 ## Algoritmo A\*
@@ -97,7 +96,7 @@ npm run preview
 
 ## Como usar a UI
 
-1. Ajuste tamanho do grid e densidade.
+1. Ajuste o tamanho do grid.
 2. Clique em **Gerar labirinto**.
 3. Edite células no modo `Paredes` (clique/arraste).
 4. Arraste `A` e `B` no grid ou use os modos `Definir A` e `Definir B`.
