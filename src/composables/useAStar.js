@@ -52,10 +52,6 @@ function custoHeuristico(origem, objetivo, modoHeuristica) {
   const dx = Math.abs(objetivo.x - origem.x)
   const dy = Math.abs(objetivo.y - origem.y)
 
-  if (modoHeuristica === 'euclidiana') {
-    return Math.hypot(dx, dy) * DISTANCIA_CELULA_METROS
-  }
-
   return (dx + dy) * DISTANCIA_CELULA_METROS
 }
 
@@ -299,9 +295,7 @@ export function executarAEstrela({
   velocidadeAgenteMps = VELOCIDADE_PADRAO_AGENTE_MPS,
   logger,
 }) {
-  const heuristicaSegura = permitirDiagonal
-    ? modoHeuristica
-    : 'manhattan'
+  const heuristicaSegura = 'manhattan'
 
   logger?.iniciarExecucao?.({
     algoritmo: 'A*',

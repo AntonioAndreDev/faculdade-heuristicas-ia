@@ -169,7 +169,6 @@ function paraNumero(evento) {
       <span>Heurística</span>
       <select :value="modoHeuristica" @change="emit('atualizar:modo-heuristica', $event.target.value)">
         <option value="manhattan">Manhattan</option>
-        <option value="euclidiana" :disabled="!permitirDiagonal">Euclidiana</option>
       </select>
     </label>
 

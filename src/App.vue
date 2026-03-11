@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 import MazeGrid from './components/MazeGrid.vue'
 import ControlsPanel from './components/ControlsPanel.vue'
 import MetricsPanel from './components/MetricsPanel.vue'
@@ -32,14 +32,9 @@ const erroIa = ref('')
 const payloadUltimaExecucao = ref(null)
 
 function rotuloHeuristica(modo) {
-  return modo === 'euclidiana' ? 'Euclidiana' : 'Manhattan'
+  return 'Manhattan'
 }
 
-watch(permitirDiagonal, (habilitado) => {
-  if (!habilitado && modoHeuristica.value === 'euclidiana') {
-    modoHeuristica.value = 'manhattan'
-  }
-})
 
 function aguardar(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms))

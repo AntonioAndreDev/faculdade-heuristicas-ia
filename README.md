@@ -28,12 +28,10 @@ Simulação web de busca heurística com **A\*** em um labirinto em grid.
 - `h(n)`: estimativa do custo até o objetivo.
 - `f(n) = g(n) + h(n)`.
 
-Heurísticas disponíveis:
+Heurística disponível:
 
-- **Manhattan** (obrigatória para 4 direções):
+- **Manhattan**:
   - `h = (|dx| + |dy|) * 500`
-- **Euclidiana** (opcional com diagonal habilitada):
-  - `h = sqrt(dx² + dy²) * 500`
 
 Desempate determinístico no open set:
 
