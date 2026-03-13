@@ -77,7 +77,7 @@ function paraNumero(evento) {
       <span>Tamanho do grid: {{ tamanhoGrade }}x{{ tamanhoGrade }}</span>
       <input
         type="range"
-        min="8"
+        min="5"
         max="40"
         step="1"
         :value="tamanhoGrade"

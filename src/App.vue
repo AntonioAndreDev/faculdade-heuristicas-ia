@@ -318,13 +318,41 @@ async function aoGerarRelatorioIa() {
 }
 
 const itensLegenda = [
-  { chave: 'A', rotulo: 'Start (A)' },
-  { chave: 'B', rotulo: 'Goal (B)' },
-  { chave: 'wall', rotulo: 'Obstáculo' },
-  { chave: 'open', rotulo: 'Conjunto aberto' },
-  { chave: 'closed', rotulo: 'Conjunto fechado' },
-  { chave: 'current', rotulo: 'Nó atual' },
-  { chave: 'path', rotulo: 'Caminho final' },
+  {
+    chave: 'A',
+    rotulo: 'Start (A)',
+    descricao: 'nó inicial do algoritmo; ponto de partida do agente. O A* expande a busca a partir daqui, calculando o custo g=0',
+  },
+  {
+    chave: 'B',
+    rotulo: 'Goal (B)',
+    descricao: 'nó destino; o algoritmo encerra quando este nó é retirado do conjunto aberto. Todo o cálculo de heurística Manhattan aponta para cá',
+  },
+  {
+    chave: 'wall',
+    rotulo: 'Obstáculo',
+    descricao: 'célula ignorada pelo A* durante a expansão de vizinhos',
+  },
+  {
+    chave: 'open',
+    rotulo: 'Conjunto aberto',
+    descricao: 'fila de prioridade do A*; contém nós descobertos ordenados pelo menor valor de f(n) = g(n) + h(n)',
+  },
+  {
+    chave: 'closed',
+    rotulo: 'Conjunto fechado',
+    descricao: 'nós cujo custo ótimo já foi determinado; o A* não os reexpande',
+  },
+  {
+    chave: 'current',
+    rotulo: 'Nó atual',
+    descricao: 'nó com menor f(n) retirado do conjunto aberto neste passo; seus vizinhos serão avaliados a seguir',
+  },
+  {
+    chave: 'path',
+    rotulo: 'Caminho final',
+    descricao: 'sequência reconstruída pelo backtracking dos nós pai, do Goal até o Start; representa o menor caminho em distância Manhattan',
+  },
 ]
 
 const podeGerarRelatorio = computed(() => Boolean(payloadUltimaExecucao.value) && !estaAnimando.value)
@@ -383,7 +411,10 @@ onBeforeUnmount(() => {
           <div class="legend-list">
             <div v-for="item in itensLegenda" :key="item.chave" class="legend-item">
               <span class="legend-dot" :class="`dot-${item.chave}`" />
-              <span>{{ item.rotulo }}</span>
+              <div class="legend-copy">
+                <span class="legend-title">{{ item.rotulo }}</span>
+                <span class="legend-description">{{ item.descricao }}</span>
+              </div>
             </div>
           </div>
         </section>
