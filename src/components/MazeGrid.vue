@@ -118,9 +118,16 @@ function aoClicarCelula(celula) {
         :class="classesCelula(celula)"
         @click="aoClicarCelula(celula)"
       >
-        <span v-if="celulaTemAgente(celula)">🤖</span>
+        <span v-if="celulaTemAgente(celula)" class="agent-icon">🤖</span>
         <span v-else-if="celula.x === objetivo.x && celula.y === objetivo.y">B</span>
       </button>
     </div>
   </section>
 </template>
+
+<style scoped>
+.agent-icon {
+  font-size: 3rem;
+  line-height: 1;
+}
+</style>
