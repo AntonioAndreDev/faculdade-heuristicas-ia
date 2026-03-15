@@ -7,7 +7,6 @@ import AiReportPanel from './components/AiReportPanel.vue'
 import { useMaze } from './composables/useMaze'
 import { executarAEstrela } from './composables/useAStar'
 import { explicarExecucao } from './services/openaiService'
-import { criarLoggerAEstrela } from './utils/logger'
 
 const labirinto = useMaze(20)
 
@@ -240,13 +239,11 @@ function executarBuscaAEstrela({ animar }) {
   }
   erroIa.value = ''
 
-  const logger = criarLoggerAEstrela({ ativo: true, nomeAlgoritmo: 'A*' })
   const resultado = executarAEstrela({
     grade: labirinto.grade.value,
     inicio: labirinto.inicio.value,
     objetivo: labirinto.objetivo.value,
     modoHeuristica: modoHeuristica.value,
-    logger,
   })
 
   atualizarPayloadUltimaExecucao(resultado)

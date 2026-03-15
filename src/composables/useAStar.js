@@ -172,7 +172,7 @@ function reconstruirCaminho(veioDe, chaveInicio, chaveObjetivo) {
 /*
   Recebe a lista do conjunto aberto já ordenada por prioridade.
   Gera uma explicação textual do motivo de um nó ter sido escolhido.
-  Isso é útil para ensino, logs e depuração.
+  Isso é útil para ensino e depuração.
   Retorna uma frase curta em português.
 */
 function explicarDecisao(conjuntoAbertoOrdenado) {
@@ -238,7 +238,6 @@ function executarBusca({
   modoHeuristica,
   desabilitarHeuristica,
   coletarRastro,
-  logger,
 }) {
   /*
     Quando a heurística está desabilitada, a função retorna sempre 0.
@@ -345,19 +344,6 @@ function executarBusca({
       .map((chave) => estadosNos.get(chave))
       .sort(compararNos)
 
-    // O logger recebe detalhes para montar explicações da execução em tempo real.
-    if (logger?.registrarIteracao && !desabilitarHeuristica) {
-      logger.registrarIteracao({
-        iteracao: iteracoes,
-        atual,
-        tamanhoAberto: conjuntoAberto.size,
-        tamanhoFechado: conjuntoFechado.size,
-        adicionadosNoAberto,
-        motivoDecisao,
-        topoAberto: abertoOrdenadoDepois.slice(0, 10),
-      })
-    }
-
     // O rastro guarda um "snapshot", ou seja, uma fotografia do estado desta iteração.
     if (coletarRastro) {
       rastro.push({
@@ -411,7 +397,7 @@ function executarBusca({
   - a grade com obstáculos
   - o ponto de início
   - o ponto de objetivo
-  - a configuração de heurística e o logger
+  - a configuração de heurística
 
   Ela executa:
   1. A* com rastro completo
@@ -424,17 +410,9 @@ export function executarAEstrela({
   grade,
   inicio,
   objetivo,
-  logger,
 }) {
   // A implementação atual fixa a heurística em Manhattan por segurança e consistência.
   const heuristicaSegura = 'manhattan'
-
-  logger?.iniciarExecucao?.({
-    algoritmo: 'A*',
-    tamanhoGrade: `${grade.length}x${grade.length}`,
-    heuristica: heuristicaSegura,
-    custoPassoMetros: DISTANCIA_CELULA_METROS,
-  })
 
   // Mede quanto tempo o algoritmo A* leva para rodar.
   const inicioExecucao = performance.now()
@@ -445,7 +423,6 @@ export function executarAEstrela({
     modoHeuristica: heuristicaSegura,
     desabilitarHeuristica: false,
     coletarRastro: true,
-    logger,
   })
   const tempoProcessamentoMs = performance.now() - inicioExecucao
 
@@ -460,7 +437,6 @@ export function executarAEstrela({
     modoHeuristica: heuristicaSegura,
     desabilitarHeuristica: true,
     coletarRastro: false,
-    logger: null,
   })
 
   // Converte a distância total em uma estimativa de tempo com base na velocidade padrão.
@@ -476,10 +452,5 @@ export function executarAEstrela({
     dijkstraEncontrou: resultadoDijkstra.encontrou,
     tempoProcessamentoMs,
   }
-
-  // Finaliza o ciclo de registro para quem estiver observando a execução.
-  logger?.registrarResultado?.(resultado)
-  logger?.finalizarExecucao?.()
-
   return resultado
 }
