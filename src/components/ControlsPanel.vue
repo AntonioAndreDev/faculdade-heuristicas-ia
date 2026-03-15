@@ -22,14 +22,6 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-  podeGerarRelatorio: {
-    type: Boolean,
-    required: true,
-  },
-  carregandoIa: {
-    type: Boolean,
-    required: true,
-  },
 })
 
 const emit = defineEmits([
@@ -39,7 +31,6 @@ const emit = defineEmits([
   'executar-passo',
   'alternar-pausa',
   'resetar-busca',
-  'gerar-relatorio-ia',
   'atualizar:tamanho-grade',
   'atualizar:modo-edicao',
   'atualizar:modo-heuristica',
@@ -63,14 +54,6 @@ function paraNumero(evento) {
       <button type="button" @click="emit('executar-passo')" :disabled="estaAnimando">Executar passo a passo</button>
       <button type="button" @click="emit('alternar-pausa')" :disabled="!estaAnimando">{{ rotuloPausa }}</button>
       <button type="button" @click="emit('resetar-busca')">Reset</button>
-      <button
-        type="button"
-        class="button-report"
-        @click="emit('gerar-relatorio-ia')"
-        :disabled="!podeGerarRelatorio || carregandoIa"
-      >
-        {{ carregandoIa ? 'Gerando relatório...' : 'Gerar relatório IA' }}
-      </button>
     </div>
 
     <label class="field">
