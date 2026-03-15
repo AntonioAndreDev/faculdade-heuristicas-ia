@@ -69,6 +69,7 @@ const celulasAchatadas = computed(() => {
 
 const estiloGrade = computed(() => ({
   gridTemplateColumns: `repeat(${props.grade.length}, minmax(0, 1fr))`,
+  '--agent-icon-size': `${Math.max(0.75, Math.min(1.8, 32 / props.grade.length))}rem`,
 }))
 
 function classesCelula(celula) {
@@ -127,7 +128,7 @@ function aoClicarCelula(celula) {
 
 <style scoped>
 .agent-icon {
-  font-size: 3rem;
+  font-size: var(--agent-icon-size);
   line-height: 1;
 }
 </style>
